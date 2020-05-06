@@ -1,7 +1,7 @@
 RANDOM_SEED: 0
 
 PHASE: "training"
-EXPERIMENT_NAME: "10classes"
+EXPERIMENT_NAME: "hidden_16_32_64_128_ratio_0.5_scheduler_lr_0.1"
 RESULTS_DIR: "results"
 OVERFIT: False
 
@@ -9,17 +9,19 @@ SHAPENET_DATA:
     PATH: "/scratch/jiadeng_root/jiadeng/shared_data/datasets/ShapeNetCore.v1/"
 
 OPTIM:
-    BATCH_SIZE: 4
-    VAL_BATCH_SIZE: 8
+    BATCH_SIZE: 1
+    VAL_BATCH_SIZE: 1
     WORKERS: 8
-    EPOCH: 100
-    LR: 0.001
+    EPOCH: 50
+    LR: 0.1
     MOMENTUM: 0.9
     WEIGHT_DECAY: 0.005
     CLIP_GRADIENTS: 12.5
 
 GCC:
     INPUT_MESH_FEATS: 3
-    HIDDEN_DIMS: [128, 256, 512]
-    CLASSES: 10
+    HIDDEN_DIMS: [16, 32, 64, 128]
+    CLASSES: 5
     CONV_INIT: "normal"
+    RATIO: 0.5
+    BN: False

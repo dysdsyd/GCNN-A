@@ -11,12 +11,12 @@ object_list = ['04379243',
  '02958343',
  '03001627',
  '02691156',
- '04256520',
- '04090263',
- '03636649',
- '04530566',
- '02828884',
- '03691459']
+ '04256520']
+#  '04090263',
+#  '03636649',
+#  '04530566',
+#  '02828884',
+#  '03691459']
 
 
 
@@ -46,8 +46,10 @@ def train_val_split(config, ratio=0.7):
     for cls in tqdm(classes):
         tmp = [(classes[cls], os.path.join(data_dir, cls, obj_file,'model.obj')) for obj_file in os.listdir(os.path.join(data_dir,cls))]
         random.shuffle(tmp)
-        tmp_train = tmp[:int(len(tmp)*0.7)]
-        tmp_test = tmp[int(len(tmp)*0.7):]
+#         tmp_train = tmp[:int(len(tmp)*0.7)]
+#         tmp_test = tmp[int(len(tmp)*0.7):]
+        tmp_train = tmp[:-2000]
+        tmp_test = tmp[-2000:]
         trn_objs += tmp_train
         val_objs += tmp_test
         print(taxonomy['name'][taxonomy.synsetId == int(cls)], len(tmp))
@@ -83,6 +85,7 @@ def save_checkpoint(model, optimizer, curr_epoch, curr_step, args, curr_loss, cu
         shutil.copyfile(path, os.path.join(args['experiment_path'], 'model_best_loss.pkl'))
     if is_best_acc:
         shutil.copyfile(path, os.path.join(args['experiment_path'], 'model_best_acc.pkl'))
+        args['best_model'] = model
 
     return args
 

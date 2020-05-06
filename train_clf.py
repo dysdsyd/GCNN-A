@@ -14,6 +14,8 @@ from gcnna.data.datasets import ShapenetDataset
 from gcnna.models.base_nn import GraphConvClf
 from gcnna.config import Config
 from gcnna.utils.torch_utils import train_val_split, save_checkpoint, accuracy
+from torch.utils.tensorboard import SummaryWriter
+from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -67,6 +69,7 @@ if __name__ == "__main__":
 
     device = torch.device("cuda:0")
     _C.DEVICE = device
+
     
     # --------------------------------------------------------------------------------------------
     #   INSTANTIATE DATALOADER, MODEL, OPTIMIZER & CRITERION
@@ -77,6 +80,7 @@ if __name__ == "__main__":
     
     if _C.OVERFIT:
         trn_objs, val_objs = trn_objs[:10], val_objs[:10]
+        _C.OPTIM.EPOCH = 10
     
     trn_dataset = ShapenetDataset(_C, trn_objs)
     trn_dataloader = DataLoader(trn_dataset, 
@@ -94,6 +98,7 @@ if __name__ == "__main__":
     
     print("Training Samples: "+str(len(trn_dataloader)))
     print("Validation Samples: "+str(len(val_dataloader)))
+    
 
     model = GraphConvClf(_C).cuda()
 #     model.load_state_dict(torch.load('results/exp_03_16_11_22_19_10classes/model@epoch3.pkl')['state_dict'])
@@ -108,10 +113,12 @@ if __name__ == "__main__":
         model.parameters(),
         lr=_C.OPTIM.LR,
     )
-#     lr_scheduler = optim.lr_scheduler.LambdaLR(  # type: ignore
-#         optimizer, lr_lambda=lambda iteration: 1 - iteration / _C.OPTIM.NUM_ITERATIONS
-#     )
-
+    iters = len(trn_dataloader)
+    scheduler = CosineAnnealingWarmRestarts(optimizer, T_0 = int(iters/4), T_mult=1, eta_min=1e-6, last_epoch=-1)
+    
+    ## Tensorboard
+    tb = SummaryWriter(os.path.join('tensorboard/',(_C.EXPERIMENT_NAME))) 
+    
     criterion = nn.CrossEntropyLoss()
     args  = {}
     args['EXPERIMENT_NAME'] =  _C.EXPERIMENT_NAME
@@ -137,10 +144,18 @@ if __name__ == "__main__":
                 continue
             label = data[0].cuda()
             mesh = data[1].cuda()
+            # Step the scheduler
+            scheduler.step(epoch + i / iters)
+            tb.add_scalar(_C.EXPERIMENT_NAME+'/Learning_Rate', scheduler.get_lr()[0], i*(epoch+1))
             # zero the parameter gradients
             optimizer.zero_grad()
             # forward + backward + optimize
-            outputs = model(mesh)
+            try:
+                outputs = model(mesh)
+            except:
+#                 print('failed for :'+str(data[2]))
+                tb.add_text(_C.EXPERIMENT_NAME+'/skipped_train_objects', str(data[2]), i*(epoch+1))
+                continue
             #print(outputs, label)
             if outputs.size()[0] == label.size()[0]:
                 loss = criterion(outputs, label)
@@ -155,6 +170,7 @@ if __name__ == "__main__":
                 print(mesh.verts_packed_to_mesh_idx().unique(return_counts=True)[1])
         running_loss /= len(trn_dataloader)
         print('\n\tTraining Loss: '+ str(running_loss))
+        tb.add_scalar(_C.EXPERIMENT_NAME+'/train_loss', running_loss, epoch)
         
         # ----------------------------------------------------------------------------------------
         #   VALIDATION
@@ -169,7 +185,13 @@ if __name__ == "__main__":
             label = data[0].cuda()
             mesh = data[1].cuda()
             with torch.no_grad():
-                batch_prediction = model(mesh)
+                try:
+                    batch_prediction = model(mesh)
+                except:
+#                     print('failed for :'+str(data[2]))
+                    tb.add_text(_C.EXPERIMENT_NAME+'/skipped_val_objects', str(data[2]), i*(epoch+1))
+                    continue
+                
                 if batch_prediction.size()[0] == label.size()[0]:
                     loss = criterion(batch_prediction, label)
                     acc = accuracy(batch_prediction, label)
@@ -184,8 +206,10 @@ if __name__ == "__main__":
         val_acc /= len(val_dataloader)
         print('\n\tValidation Loss: '+str(val_loss))
         print('\tValidation Acc: '+str(val_acc.item()))
+        tb.add_scalar(_C.EXPERIMENT_NAME+'/val_loss', val_loss, epoch)
+        tb.add_scalar(_C.EXPERIMENT_NAME+'/val_acc', val_acc.item(), epoch)
         # Final save of the model
-        args = save_checkpoint(model      = model,
+        args = save_checkpoint(model    = model,
                              optimizer  = optimizer,
                              curr_epoch = epoch,
                              curr_loss  = val_loss,
@@ -194,8 +218,10 @@ if __name__ == "__main__":
                              curr_acc   = val_acc.item(),
                              trn_loss   = running_loss,
                              filename   = ('model@epoch%d.pkl' %(epoch)))
+        torch.save(args['best_model'], os.path.join(args['experiment_path'], 'best_model.pth'))
           
         print('---------------------------------------------------------------------------------------\n')
     print('Finished Training')
     print('Best Accuracy on validation',args['best_acc'])
     print('Best Loss on validation',args['best_loss'])
+    tb.close() 

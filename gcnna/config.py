@@ -69,6 +69,8 @@ class Config(object):
         self._C.GCC.HIDDEN_DIMS = [32, 64, 128]
         self._C.GCC.CLASSES = 57
         self._C.GCC.CONV_INIT = "normal"
+        self._C.GCC.RATIO = 0.5
+        self._C.GCC.BN = True
 
         self._C.merge_from_file(config_yaml)
         self._C.merge_from_list(config_override)
@@ -80,7 +82,7 @@ class Config(object):
         self._C.CKP.best_acc = 0.
 
         # Make an instantiated object of this class immutable.
-        self._C.freeze()
+#         self._C.freeze()
 
     def dump(self, file_path: str):
         r"""Save config at the specified file path.

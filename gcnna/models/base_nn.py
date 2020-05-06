@@ -3,7 +3,8 @@ import torch.nn as nn
 from torch.nn import functional as F
 from pytorch3d.ops import GraphConv
 from gcnna.config import Config
-from gcnna.layers.pooling import GlobalAveragePooling, GlobalMaxPooling
+from gcnna.layers.pooling import GlobalAveragePooling, GlobalMaxPooling, SAGPool
+from gcnna.layers.norm import BatchNorm
 from pytorch3d.structures.utils import packed_to_list, list_to_padded
 
 class GraphConvClf(nn.Module):
@@ -13,17 +14,23 @@ class GraphConvClf(nn.Module):
         hidden_dims = cfg.GCC.HIDDEN_DIMS 
         classes = cfg.GCC.CLASSES
         gconv_init = cfg.GCC.CONV_INIT
+        ratio = cfg.GCC.RATIO
+        BN = cfg.GCC.BN
         
         # Graph Convolution Network
         self.gconvs = nn.ModuleList()
         dims = [input_dim] + hidden_dims
         for i in range(len(dims)-1):
+            self.gconvs.append(SAGPool(dims[i], ratio=ratio))
             self.gconvs.append(GraphConv(dims[i], dims[i+1], init=gconv_init, directed=False))
+            if BN:
+                self.gconvs.append(BatchNorm(dims[i+1]))
+            
         
         self.gap = GlobalAveragePooling()
         self.gmp = GlobalMaxPooling()
-        self.fc1 = nn.Linear(dims[-1]*2,1024)
-        self.fc2 = nn.Linear(1024, classes)
+        self.fc1 = nn.Linear(dims[-1]*2,dims[-1]*2)
+        self.fc2 = nn.Linear(dims[-1]*2, classes)
         
         nn.init.normal_(self.fc1.weight, mean=0.0, std=0.01)
         nn.init.constant_(self.fc1.bias, 0)
@@ -37,21 +44,21 @@ class GraphConvClf(nn.Module):
         verts_idx = mesh.verts_packed_to_mesh_idx()
         edges_idx = mesh.edges_packed_to_mesh_idx()
         
-        
-        print(verts.shape)
         for gconv in self.gconvs:
-            verts = F.relu(gconv(verts, edges))
-            print(verts.shape)
+            if 'SAGPool' in str(gconv):
+                verts, edges, verts_idx, edges_idx = gconv(verts, edges, verts_idx, edges_idx)
+            elif 'GraphConv'in str(gconv):
+                verts = gconv(verts, edges)
+            elif 'BatchNorm'in str(gconv):
+                verts = gconv(verts)
+            verts = F.relu(verts)
+            
         
         avg_pool = self.gap(verts, verts_idx)
         max_pool = self.gmp(verts, verts_idx)
-        print(avg_pool.shape, max_pool.shape)
         out = torch.cat([avg_pool, max_pool], dim=1)
-        print(out.shape)
         out = F.relu(self.fc1(out))
-        print(out.shape)
         out =  self.fc2(out)
-        print(out.shape)
         return out
     
     def get_forward_feats(self, mesh=None, verts=None, edges=None, layername='gconv0'):
