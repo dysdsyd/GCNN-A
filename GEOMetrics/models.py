@@ -520,6 +520,102 @@ class MeshEncoderGCN(nn.Module):
         raise Exception('Invalid Layer Id passed!')
 
 
+class MeshEncoderGCN_elu(nn.Module):
+    def __init__(self, latent_length):
+        super(MeshEncoderGCN_elu, self).__init__()
+        self.h1 = GraphConv(3, 60)
+        self.h21 = GraphConv(60, 60)
+        self.h22 = GraphConv(60, 60)
+        self.h23 = GraphConv(60, 60)
+        self.h24 = GraphConv(60,120)
+        self.h3 = GraphConv(120, 120)
+        self.h4 = GraphConv(120, 120)
+        self.h41 = GraphConv(120, 150)
+        self.h5 = GraphConv(150, 200)
+        self.h6 = GraphConv(200, 210)
+        self.h7 = GraphConv(210, 250)
+        self.h8 = GraphConv(250, 300)
+        self.h81 = GraphConv(300, 300)
+        self.h9 = GraphConv(300, 300)
+        self.h10 = GraphConv(300, 300)
+        self.h11 = GraphConv(300, 300)
+        self.reduce = GraphConv(300,latent_length)
+
+    def resnet( self, features, res):
+        temp = features[:,:res.shape[1]]
+        temp = temp + res
+        features = torch.cat((temp,features[:,res.shape[1]:]), dim = 1)
+        return features, features
+
+
+    def forward(self, positions, edges, play = False):
+        # print positions[:5, :5]
+        features = F.elu(self.h1(positions, edges))
+        features = F.elu(self.h21(features, edges))
+        features = F.elu(self.h22(features, edges))
+        features = F.elu(self.h23(features, edges))
+        features = F.elu(self.h24(features, edges))
+        features = F.elu(self.h3(features, edges))
+        features = F.elu(self.h4(features, edges))
+        features = F.elu(self.h41(features, edges))
+        features = F.elu(self.h5(features, edges))
+        features = F.elu(self.h6(features, edges))
+        features = F.elu(self.h7(features, edges))
+        features = F.elu(self.h8(features, edges))
+        features = F.elu(self.h81(features, edges))
+        features = F.elu(self.h9(features, edges))
+        features = F.elu(self.h10(features, edges))
+        features = F.elu(self.h11(features, edges))
+
+        latent_pre   = F.elu(self.reduce(features , edges))
+        latent = torch.max(latent_pre, 0, keepdim=True)[0]
+
+        return latent
+
+    def extract_feats(self, mesh, layer):
+        positions = mesh.verts_packed()
+        edges = mesh.edges_packed()
+
+        features = F.elu(self.h1(positions, edges))
+        if layer == 'h1': return features
+        features = F.elu(self.h21(features, edges))
+        if layer == 'h21': return features
+        features = F.elu(self.h22(features, edges))
+        if layer == 'h22': return features
+        features = F.elu(self.h23(features, edges))
+        if layer == 'h23': return features
+        features = F.elu(self.h24(features, edges))
+        if layer == 'h24': return features
+        features = F.elu(self.h3(features, edges))
+        if layer == 'h3': return features
+        features = F.elu(self.h4(features, edges))
+        if layer == 'h4': return features
+        features = F.elu(self.h41(features, edges))
+        if layer == 'h41': return features
+        features = F.elu(self.h5(features, edges))
+        if layer == 'h5': return features
+        features = F.elu(self.h6(features, edges))
+        if layer == 'h6': return features
+        features = F.elu(self.h7(features, edges))
+        if layer == 'h7': return features
+        features = F.elu(self.h8(features, edges))
+        if layer == 'h8': return features
+        features = F.elu(self.h81(features, edges))
+        if layer == 'h81': return features
+        features = F.elu(self.h9(features, edges))
+        if layer == 'h9': return features
+        features = F.elu(self.h10(features, edges))
+        if layer == 'h10': return features
+        features = F.elu(self.h11(features, edges))
+        if layer == 'h11': return features
+
+        latent_pre   = F.elu(self.reduce(features , edges))
+        latent = torch.max(latent_pre, 0, keepdim=True)[0]
+        if layer == 'latent': return latent
+
+        raise Exception('Invalid Layer Id passed!')
+
+
 class Decoder(nn.Module):
     def __init__(self, latent_length):
         super(Decoder, self).__init__()

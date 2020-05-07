@@ -83,18 +83,23 @@ class FeatureVisualization():
         return mesh.cuda()
 
     def normalize_verts(self, verts):
+        # X
         if (verts[:,0].max() - verts[:,0].min()) != 0:
-            verts[:,0] = (2.0* (verts[:,0] - verts[:,0].min())/(verts[:,0].max() - verts[:,0].min())) - 1.0
-        else: 
-            verts[:,0] = 0.5
+            verts[:,0] = ((verts[:,0] - verts[:,0].min())/(verts[:,0].max() - verts[:,0].min())) - 0.5
+        else:
+            verts[:,0] = 0.1
+
+        # Y
         if (verts[:,1].max() - verts[:,1].min()) != 0:
-            verts[:,1] = (2.0* (verts[:,1] - verts[:,1].min())/(verts[:,1].max() - verts[:,1].min())) - 1.0
-        else: 
-            verts[:,1] = 0.5
+            verts[:,1] = ((verts[:,1] - verts[:,1].min())/(verts[:,1].max() - verts[:,1].min())) - 0.5
+        else:
+            verts[:,1] = 0.1
+
+        # Z
         if (verts[:,2].max() - verts[:,2].min()) != 0:
-            verts[:,2] = (2.0* (verts[:,2] - verts[:,2].min())/(verts[:,2].max() - verts[:,2].min())) - 1.0
-        else: 
-            verts[:,2] = 0.5
+            verts[:,2] = ((verts[:,2] - verts[:,2].min())/(verts[:,2].max() - verts[:,2].min())) - 0.5
+        else:
+            verts[:,2] = 0.1
         return verts
         
 
@@ -143,94 +148,108 @@ class FeatureVisualization():
         return layer_output
 
     ################### Feature Inversion ######################
-    def invert_feats(self, trg_obj_path, target_layer='latent', iters = 200, trg_feats=None):
+    def invert_feats(self, trg_obj_path, trg_feats=None, layer='latent',filter=None, weights=None, iters = 200, ico_level=3):
+        # Load intial mesh
+        if self.src_mesh_name == "sphere":
+            self.src_mesh = ico_sphere(ico_level).cuda()
+        elif self.src_mesh_name =='disk':
+            self.src_mesh = ico_disk(ico_level).cuda()
+        else:
+            self.src_mesh = self.load_mesh(src_mesh)   
+
+        # Load target mesh
         if trg_feats == None:
-        # Intialize the src mesh and target mesh
             self.trg_mesh = self.load_mesh(trg_obj_path)
             # Get the output from the model after a forward pass until target_layer with the target object
-            trg_feats = self.get_feats_from_layer(self.trg_mesh, target_layer)
+            trg_feats = self.get_feats_from_layer(self.trg_mesh, layer)
         
         # optimize defrom_verts
-#         deform_verts = torch.full(self.src_mesh.verts_packed().shape, 0.0, requires_grad=True, device=device)
-        # Define optimizer for previously created deform_verts
-        deform_verts = Variable(self.src_mesh.verts_packed(), requires_grad = True)
-        optimizer = torch.optim.Adam([deform_verts], lr = 1)
+        deform_verts = Variable(self.normalize_verts(self.src_mesh.verts_packed().clone()), requires_grad = True)
+        optimizer = torch.optim.Adam([deform_verts], lr = 0.1)
 
         for i in tqdm(range(iters)):
             optimizer.zero_grad()
-#             self.new_src_mesh = self.src_mesh.offset_verts(deform_verts)
             self.new_src_mesh = Meshes(verts=[deform_verts], faces=[self.src_mesh.faces_packed()])
             # Get the output from the model after a forward pass until target_layer for the source object
-            src_feats = self.get_feats_from_layer(self.new_src_mesh, target_layer)
+            src_feats = self.get_feats_from_layer(self.new_src_mesh, layer)
+
+
+            # Losses
+            # cosine_loss = cos(trg_feats.detach(), src_feats)
+            # euc_loss = .1*self.euclidian_loss(trg_feats.detach(), src_feats)
+            # rmse_loss = self.rmse(trg_feats.detach(), src_feats)
+            # latent_loss = 0.000005*(torch.mean(torch.abs(trg_feats.detach() - src_feats)))
+            # gram_loss = 1e-17*self.get_gram_loss(src_feats, trg_feats.detach())
+            cd_loss, _ = chamfer_distance( trg_feats.unsqueeze(0).detach(), src_feats.unsqueeze(0))
+            cd_loss = weights['cd_loss'] * cd_loss
             
-#             cosine_loss = cos(trg_feats.detach(), src_feats)
-#             euc_loss = .1*self.euclidian_loss(trg_feats.detach(), src_feats)
-#             rmse_loss = self.rmse(trg_feats.detach(), src_feats)
-#             latent_loss = 0.000005*(torch.mean(torch.abs(trg_feats.detach() - src_feats)))
-            gram_loss = 1e-17*self.get_gram_loss(src_feats, trg_feats.detach())
-            
-            laplacian_loss = 1*mesh_laplacian_smoothing(self.new_src_mesh, method="uniform")
-            edge_loss = 1*mesh_edge_loss(self.new_src_mesh)
-            normal_loss = 1*mesh_normal_consistency(self.new_src_mesh)
+            # Regularizations
+            laplacian_loss = weights['lap_loss']*mesh_laplacian_smoothing(self.new_src_mesh, method="uniform")
+            edge_loss = weights['edge_loss']*mesh_edge_loss(self.new_src_mesh)
+            # normal_loss = 1*mesh_normal_consistency(self.new_src_mesh)
             
             # Sum all to optimize
-            loss =  laplacian_loss + gram_loss #+ gram_loss  #normal_loss #+latent_loss + cosine_loss + euc_loss#+#euc_loss  edge_loss
+            loss =  cd_loss + laplacian_loss + edge_loss#+ gram_loss #+ gram_loss  #normal_loss #+latent_loss + cosine_loss + euc_loss#+#euc_loss  edge_loss
+            
             # Step
             loss.backward()
             optimizer.step()
             
             # Generate image every 5 iterations
-            if i % 50 == 0:
+            if i % int(iters/5) == 0:
                 print('Iteration:', str(i), 
                       'Loss:', loss.item(), 
-                      "Gram Loss:", gram_loss.item(),
+                      'CD Loss', cd_loss.item(),
+                    #   "Gram Loss:", gram_loss.item(),
 #                       "Cosine Loss:", cosine_loss.item(),
 #                       "Latent Loss:", latent_loss.item(),
 #                       "Euc Loss:", euc_loss.item(), 
                       "Lap Loss:", laplacian_loss.item(), 
-                      "Edge Loss:", edge_loss.item()
-                     ,"Normal Loss:", normal_loss.item())
+                      "Edge Loss:", edge_loss.item(),
+                    #  ,"Normal Loss:", normal_loss.item(),
+                     )
                 plot_pointcloud(self.new_src_mesh)
-                plt.close()
+                
 
             # Reduce learning rate every 50 iterations
-            if i % 100 == 0:
-                for param_group in optimizer.param_groups:
-                    param_group['lr'] *= 1/10
+            # if i % 100 == 0:
+            #     for param_group in optimizer.param_groups:
+            #         param_group['lr'] *= 1/10
                     
-        obj_path = os.path.join(res_path, 'feat_inv', self.src_mesh_name, 'euc')
-        os.makedirs(obj_path, exist_ok=True)
-        save_obj(os.path.join(obj_path,target_layer+'.obj'), self.new_src_mesh.verts_packed(), self.new_src_mesh.faces_packed())
+        os.makedirs(self.result_dir, exist_ok=True)
+        obj_path = os.path.join(self.result_dir, self.src_mesh_name+'_'+layer+'.obj')
+        save_obj(obj_path, self.new_src_mesh.verts_packed(), self.new_src_mesh.faces_packed())
 
     
     ################### DeepDream per layer for each channel ######################
     def dream_layer(self, layer, filter, iters=200, ico_level=3):
-        # Load intiial mesh
+        # Load intial mesh
         if self.src_mesh_name == "sphere":
             self.src_mesh = ico_sphere(ico_level).cuda()
         elif self.src_mesh_name =='disk':
-            self.src_mesh = ico_disk(ico_levels).cuda()
+            self.src_mesh = ico_disk(ico_level).cuda()
         else:
             self.src_mesh = self.load_mesh(src_mesh)    
         
-        deform_verts = Variable(self.normalize_verts(self.src_mesh.verts_packed()), requires_grad = True)
-        optimizer = torch.optim.Adam([deform_verts], lr = 10)
-
+        deform_verts = Variable(self.normalize_verts(self.src_mesh.clone().verts_packed()), requires_grad = True)
+        optimizer = torch.optim.Adam([deform_verts], lr = 0.01)
+        
         for i in tqdm(range(iters)):
             optimizer.zero_grad()
             self.new_src_mesh = Meshes(verts=[deform_verts], faces=[self.src_mesh.faces_packed()])
-            
             # Get the output from the model after a forward pass until target_layer for the source object
             src_feats = self.get_feats_from_layer(self.new_src_mesh, layer)[:, filter]
             
-            
-            laplacian_loss = 1*mesh_laplacian_smoothing(self.new_src_mesh, method="uniform")
-            edge_loss = 1*mesh_edge_loss(self.new_src_mesh)
+            # Regularizations
+            laplacian_loss = 0.1*mesh_laplacian_smoothing(self.new_src_mesh, method="uniform")
+            edge_loss = 0.1**mesh_edge_loss(self.new_src_mesh)
             # normal_loss = 1*mesh_normal_consistency(self.new_src_mesh)
+            verts_reg = 1*(torch.mean(torch.abs(deform_verts[:,0])) + torch.mean(torch.abs(deform_verts[:,1])) + torch.mean(torch.abs(deform_verts[:,2])))
             
+            # Losses
             dream_loss = -torch.mean(src_feats)
             # Sum all to optimize
-            loss =   dream_loss#+ laplacian_loss + edge_loss
+            loss =   dream_loss + verts_reg #+ laplacian_loss + edge_loss 
             # Step
             loss.backward()
             optimizer.step()
@@ -241,15 +260,17 @@ class FeatureVisualization():
                       'Loss:', loss.item(), 
                       "Dream Loss", dream_loss.item(),
                       "Lap Loss:", laplacian_loss.item(), 
-                      "Edge Loss:", edge_loss.item()
+                      "Edge Loss:", edge_loss.item(),
+                      "Verts Reg:", verts_reg.item(),
                      # ,"Normal Loss:", normal_loss.item())
                      )
                 plot_pointcloud(self.new_src_mesh)
+                plt.close()
 
-            # Reduce learning rate every 50 iterations
-            if i % 100 == 0:
-                for param_group in optimizer.param_groups:
-                    param_group['lr'] *= 1/5
+            # # Reduce learning rate every 50 iterations
+            # if i % 100 == 0:
+            #     for param_group in optimizer.param_groups:
+            #         param_group['lr'] *= 1/5
 
 
 

@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 import warnings
 import pickle
+import random
 warnings.filterwarnings("ignore")
 
 # Training settings
@@ -13,7 +14,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type=int, default=40, help='Random seed.')
 parser.add_argument('--epochs', type=int, default=150,
                     help='Number of epochs to train.')
-parser.add_argument('--lr', type=float, default=0.001,
+parser.add_argument('--lr', type=float, default=0.0001,
                     help='Initial learning rate.')
 parser.add_argument('--exp_id', type=str, default='zgcn_run_norm',
                     help='The experiment name')
@@ -21,7 +22,7 @@ parser.add_argument('--exp_id', type=str, default='zgcn_run_norm',
 
 args = parser.parse_args()
 overfit = False
-batch_size = 16
+batch_size = 8
 latent_length = 50
 np.random.seed(args.seed)
 torch.manual_seed(args.seed)
@@ -40,9 +41,9 @@ for p in glob(path+'/*'):
         # print(p.split('/')[-1])
         cls_pths = glob(p+'/*')
         # ratio = int(len(cls_pths)*.7)
-
-        train_paths += cls_pths[:3000]
-        valid_paths += cls_pths[3000:4000]
+        random.shuffle(cls_pths)
+        train_paths += cls_pths[:2000]
+        valid_paths += cls_pths[2000:2500]
 # print('\t training: ', len(train_paths))
 # print('\t validation: ', len(valid_paths))
 
@@ -101,21 +102,21 @@ tb = SummaryWriter(os.path.join('../tensorboard/',args.exp_id))
 def normalize_verts(verts):
     # X
     if (verts[:,0].max() - verts[:,0].min()) != 0:
-        verts[:,0] = ((verts[:,0] - verts[:,0].min())/(verts[:,0].max() - verts[:,0].min())) 
+        verts[:,0] = ((verts[:,0] - verts[:,0].min())/(verts[:,0].max() - verts[:,0].min()))  - 0.5
     else:
-        verts[:,0] = 0.5
+        verts[:,0] = 0.1
 
     # Y
     if (verts[:,1].max() - verts[:,1].min()) != 0:
-        verts[:,1] = ((verts[:,1] - verts[:,1].min())/(verts[:,1].max() - verts[:,1].min())) 
+        verts[:,1] = ((verts[:,1] - verts[:,1].min())/(verts[:,1].max() - verts[:,1].min())) - 0.5
     else:
-        verts[:,1] = 0.5
+        verts[:,1] = 0.1
 
     # Z
     if (verts[:,2].max() - verts[:,2].min()) != 0:
-        verts[:,2] = ((verts[:,2] - verts[:,2].min())/(verts[:,2].max() - verts[:,2].min())) 
+        verts[:,2] = ((verts[:,2] - verts[:,2].min())/(verts[:,2].max() - verts[:,2].min())) - 0.5
     else:
-        verts[:,2] = 0.5
+        verts[:,2] = 0.1
     return verts
 
 
