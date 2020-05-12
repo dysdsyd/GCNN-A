@@ -74,7 +74,8 @@ class FeatureVisualization():
         self.model.eval()
         self.src_mesh_name = src_mesh
         self.exp = exp
-        self.result_dir = os.path.join('/scratch/jiadeng_root/jiadeng/shared_data/gcnna_data/', self.exp)
+        # self.result_dir = os.path.join('/scratch/jiadeng_root/jiadeng/shared_data/gcnna_data/', self.exp)
+        self.result_dir = os.path.join('results/gcnna_data/', self.exp)
         os.makedirs(self.result_dir, exist_ok=True)
         
     def load_mesh(self, pth):
@@ -101,7 +102,19 @@ class FeatureVisualization():
         else:
             verts[:,2] = 0.1
         return verts
-        
+
+    def PCA_svd(self, X, k=3, center=True):
+        n = X.size()[0]
+        ones = torch.ones(n).view([n,1])
+        h = ((1/n) * torch.mm(ones, ones.t())) if center  else torch.zeros(n*n).view([n,n])
+        H = (torch.eye(n) - h).cuda()
+        X_center =  torch.mm(H.double(), X.double())
+        u, s, v = torch.svd(X_center) 
+    #     print(u.t().shape, v.t().shape)
+        components  = v[:k].t()
+        explained_variance = torch.mul(s[:k], s[:k])/(n-1)
+        return components
+                
 
     def alpha_norm(self, input_matrix, alpha):
         """
@@ -148,7 +161,7 @@ class FeatureVisualization():
         return layer_output
 
     ################### Feature Inversion ######################
-    def invert_feats(self, trg_obj_path, trg_feats=None, layer='latent',filter=None, weights=None, iters = 200, ico_level=3):
+    def invert_feats(self, trg_obj_path, trg_feats=None, layer='latent',filter=None, lr=1, weights=None, iters = 200, ico_level=3, verbose=False):
         # Load intial mesh
         if self.src_mesh_name == "sphere":
             self.src_mesh = ico_sphere(ico_level).cuda()
@@ -162,10 +175,11 @@ class FeatureVisualization():
             self.trg_mesh = self.load_mesh(trg_obj_path)
             # Get the output from the model after a forward pass until target_layer with the target object
             trg_feats = self.get_feats_from_layer(self.trg_mesh, layer)
+            self.trg_feats = trg_feats
         
         # optimize defrom_verts
         deform_verts = Variable(self.normalize_verts(self.src_mesh.verts_packed().clone()), requires_grad = True)
-        optimizer = torch.optim.Adam([deform_verts], lr = 0.1)
+        optimizer = torch.optim.Adam([deform_verts], lr = lr)
 
         for i in tqdm(range(iters)):
             optimizer.zero_grad()
@@ -180,7 +194,13 @@ class FeatureVisualization():
             # rmse_loss = self.rmse(trg_feats.detach(), src_feats)
             # latent_loss = 0.000005*(torch.mean(torch.abs(trg_feats.detach() - src_feats)))
             # gram_loss = 1e-17*self.get_gram_loss(src_feats, trg_feats.detach())
-            cd_loss, _ = chamfer_distance( trg_feats.unsqueeze(0).detach(), src_feats.unsqueeze(0))
+            if filter == None:
+                cd_loss, _ = chamfer_distance(trg_feats.unsqueeze(0).detach(), src_feats.unsqueeze(0))
+                # cd_loss, _ = chamfer_distance(self.PCA_svd(trg_feats, k=10).t().unsqueeze(0).detach(), 
+                #             self.PCA_svd(src_feats,k=10).t().unsqueeze(0))
+            else:
+                # print(trg_feats[:,filter].view(1,-1,1).shape)
+                cd_loss, _ = chamfer_distance( trg_feats[:,filter].view(1,-1,1).detach(), src_feats[:,filter].view(1,-1,1))
             cd_loss = weights['cd_loss'] * cd_loss
             
             # Regularizations
@@ -196,7 +216,7 @@ class FeatureVisualization():
             optimizer.step()
             
             # Generate image every 5 iterations
-            if i % int(iters/5) == 0:
+            if i % int(iters/5) == 0 and verbose:
                 print('Iteration:', str(i), 
                       'Loss:', loss.item(), 
                       'CD Loss', cd_loss.item(),
@@ -208,6 +228,7 @@ class FeatureVisualization():
                       "Edge Loss:", edge_loss.item(),
                     #  ,"Normal Loss:", normal_loss.item(),
                      )
+                
                 plot_pointcloud(self.new_src_mesh)
                 
 
@@ -217,7 +238,10 @@ class FeatureVisualization():
             #         param_group['lr'] *= 1/10
                     
         os.makedirs(self.result_dir, exist_ok=True)
-        obj_path = os.path.join(self.result_dir, self.src_mesh_name+'_'+layer+'.obj')
+        if filter == None:
+            obj_path = os.path.join(self.result_dir, self.src_mesh_name+'_'+layer+'.obj')
+        else:
+            obj_path = os.path.join(self.result_dir, self.src_mesh_name + '_' + layer + '_' + str(filter) + '.obj') 
         save_obj(obj_path, self.new_src_mesh.verts_packed(), self.new_src_mesh.faces_packed())
 
     
@@ -244,7 +268,9 @@ class FeatureVisualization():
             laplacian_loss = 0.1*mesh_laplacian_smoothing(self.new_src_mesh, method="uniform")
             edge_loss = 0.1**mesh_edge_loss(self.new_src_mesh)
             # normal_loss = 1*mesh_normal_consistency(self.new_src_mesh)
-            verts_reg = 1*(torch.mean(torch.abs(deform_verts[:,0])) + torch.mean(torch.abs(deform_verts[:,1])) + torch.mean(torch.abs(deform_verts[:,2])))
+            verts_reg = 1*(torch.mean(torch.abs(deform_verts[:,0])) + 
+                            torch.mean(torch.abs(deform_verts[:,1])) + 
+                            torch.mean(torch.abs(deform_verts[:,2])))
             
             # Losses
             dream_loss = -torch.mean(src_feats)
