@@ -1,0 +1,495 @@
+================ Testing Acc (Wed May 20 15:26:52 2020) ================
+epoch: 1, TEST ACC: [7.5 %]
+
+================ Testing Acc (Wed May 20 15:27:09 2020) ================
+epoch: 2, TEST ACC: [22.5 %]
+
+================ Testing Acc (Wed May 20 15:27:26 2020) ================
+epoch: 3, TEST ACC: [22.5 %]
+
+================ Testing Acc (Wed May 20 15:27:44 2020) ================
+epoch: 4, TEST ACC: [23.333 %]
+
+================ Testing Acc (Wed May 20 15:27:59 2020) ================
+epoch: 5, TEST ACC: [31.667 %]
+
+================ Testing Acc (Wed May 20 15:28:16 2020) ================
+epoch: 6, TEST ACC: [35.833 %]
+
+================ Testing Acc (Wed May 20 15:28:31 2020) ================
+epoch: 7, TEST ACC: [33.333 %]
+
+================ Testing Acc (Wed May 20 15:28:47 2020) ================
+epoch: 8, TEST ACC: [32.5 %]
+
+================ Testing Acc (Wed May 20 15:29:02 2020) ================
+epoch: 9, TEST ACC: [35.0 %]
+
+================ Testing Acc (Wed May 20 15:29:16 2020) ================
+epoch: 10, TEST ACC: [35.833 %]
+
+================ Testing Acc (Wed May 20 15:29:31 2020) ================
+epoch: 11, TEST ACC: [45.0 %]
+
+================ Testing Acc (Wed May 20 15:29:47 2020) ================
+epoch: 12, TEST ACC: [43.333 %]
+
+================ Testing Acc (Wed May 20 15:30:01 2020) ================
+epoch: 13, TEST ACC: [49.167 %]
+
+================ Testing Acc (Wed May 20 15:30:16 2020) ================
+epoch: 14, TEST ACC: [54.167 %]
+
+================ Testing Acc (Wed May 20 15:30:31 2020) ================
+epoch: 15, TEST ACC: [50.0 %]
+
+================ Testing Acc (Wed May 20 15:30:46 2020) ================
+epoch: 16, TEST ACC: [56.667 %]
+
+================ Testing Acc (Wed May 20 15:31:00 2020) ================
+epoch: 17, TEST ACC: [55.0 %]
+
+================ Testing Acc (Wed May 20 15:31:14 2020) ================
+epoch: 18, TEST ACC: [47.5 %]
+
+================ Testing Acc (Wed May 20 15:31:28 2020) ================
+epoch: 19, TEST ACC: [62.5 %]
+
+================ Testing Acc (Wed May 20 15:31:42 2020) ================
+epoch: 20, TEST ACC: [64.167 %]
+
+================ Testing Acc (Wed May 20 15:31:56 2020) ================
+epoch: 21, TEST ACC: [65.0 %]
+
+================ Testing Acc (Wed May 20 15:32:10 2020) ================
+epoch: 22, TEST ACC: [65.833 %]
+
+================ Testing Acc (Wed May 20 15:32:24 2020) ================
+epoch: 23, TEST ACC: [44.167 %]
+
+================ Testing Acc (Wed May 20 15:32:39 2020) ================
+epoch: 24, TEST ACC: [65.0 %]
+
+================ Testing Acc (Wed May 20 15:32:53 2020) ================
+epoch: 25, TEST ACC: [70.833 %]
+
+================ Testing Acc (Wed May 20 15:33:07 2020) ================
+epoch: 26, TEST ACC: [69.167 %]
+
+================ Testing Acc (Wed May 20 15:33:21 2020) ================
+epoch: 27, TEST ACC: [63.333 %]
+
+================ Testing Acc (Wed May 20 15:33:35 2020) ================
+epoch: 28, TEST ACC: [68.333 %]
+
+================ Testing Acc (Wed May 20 15:33:50 2020) ================
+epoch: 29, TEST ACC: [66.667 %]
+
+================ Testing Acc (Wed May 20 15:34:04 2020) ================
+epoch: 30, TEST ACC: [69.167 %]
+
+================ Testing Acc (Wed May 20 15:34:19 2020) ================
+epoch: 31, TEST ACC: [70.0 %]
+
+================ Testing Acc (Wed May 20 15:34:33 2020) ================
+epoch: 32, TEST ACC: [67.5 %]
+
+================ Testing Acc (Wed May 20 15:34:48 2020) ================
+epoch: 33, TEST ACC: [67.5 %]
+
+================ Testing Acc (Wed May 20 15:35:03 2020) ================
+epoch: 34, TEST ACC: [70.0 %]
+
+================ Testing Acc (Wed May 20 15:35:17 2020) ================
+epoch: 35, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:35:32 2020) ================
+epoch: 36, TEST ACC: [64.167 %]
+
+================ Testing Acc (Wed May 20 15:35:46 2020) ================
+epoch: 37, TEST ACC: [69.167 %]
+
+================ Testing Acc (Wed May 20 15:36:01 2020) ================
+epoch: 38, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:36:15 2020) ================
+epoch: 39, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:36:29 2020) ================
+epoch: 40, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:36:44 2020) ================
+epoch: 41, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:36:57 2020) ================
+epoch: 42, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:37:12 2020) ================
+epoch: 43, TEST ACC: [70.833 %]
+
+================ Testing Acc (Wed May 20 15:37:27 2020) ================
+epoch: 44, TEST ACC: [70.833 %]
+
+================ Testing Acc (Wed May 20 15:37:41 2020) ================
+epoch: 45, TEST ACC: [69.167 %]
+
+================ Testing Acc (Wed May 20 15:37:56 2020) ================
+epoch: 46, TEST ACC: [67.5 %]
+
+================ Testing Acc (Wed May 20 15:38:10 2020) ================
+epoch: 47, TEST ACC: [68.333 %]
+
+================ Testing Acc (Wed May 20 15:38:24 2020) ================
+epoch: 48, TEST ACC: [65.833 %]
+
+================ Testing Acc (Wed May 20 15:38:39 2020) ================
+epoch: 49, TEST ACC: [70.833 %]
+
+================ Testing Acc (Wed May 20 15:38:53 2020) ================
+epoch: 50, TEST ACC: [63.333 %]
+
+================ Testing Acc (Wed May 20 15:39:08 2020) ================
+epoch: 51, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:39:23 2020) ================
+epoch: 52, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:39:38 2020) ================
+epoch: 53, TEST ACC: [70.833 %]
+
+================ Testing Acc (Wed May 20 15:39:52 2020) ================
+epoch: 54, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:40:07 2020) ================
+epoch: 55, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:40:21 2020) ================
+epoch: 56, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:40:35 2020) ================
+epoch: 57, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:40:49 2020) ================
+epoch: 58, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 15:41:04 2020) ================
+epoch: 59, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:41:19 2020) ================
+epoch: 60, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 15:41:33 2020) ================
+epoch: 61, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 15:41:47 2020) ================
+epoch: 62, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:42:02 2020) ================
+epoch: 63, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:42:17 2020) ================
+epoch: 64, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:42:31 2020) ================
+epoch: 65, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:42:45 2020) ================
+epoch: 66, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:43:00 2020) ================
+epoch: 67, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:43:14 2020) ================
+epoch: 68, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:43:27 2020) ================
+epoch: 69, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:43:42 2020) ================
+epoch: 70, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:43:56 2020) ================
+epoch: 71, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:44:10 2020) ================
+epoch: 72, TEST ACC: [70.0 %]
+
+================ Testing Acc (Wed May 20 15:44:24 2020) ================
+epoch: 73, TEST ACC: [60.0 %]
+
+================ Testing Acc (Wed May 20 15:44:38 2020) ================
+epoch: 74, TEST ACC: [55.0 %]
+
+================ Testing Acc (Wed May 20 15:44:52 2020) ================
+epoch: 75, TEST ACC: [65.833 %]
+
+================ Testing Acc (Wed May 20 15:45:06 2020) ================
+epoch: 76, TEST ACC: [70.833 %]
+
+================ Testing Acc (Wed May 20 15:45:20 2020) ================
+epoch: 77, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:45:34 2020) ================
+epoch: 78, TEST ACC: [70.833 %]
+
+================ Testing Acc (Wed May 20 15:45:48 2020) ================
+epoch: 79, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:46:03 2020) ================
+epoch: 80, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:46:17 2020) ================
+epoch: 81, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:46:31 2020) ================
+epoch: 82, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:46:45 2020) ================
+epoch: 83, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:47:00 2020) ================
+epoch: 84, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:47:14 2020) ================
+epoch: 85, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:47:29 2020) ================
+epoch: 86, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:47:44 2020) ================
+epoch: 87, TEST ACC: [77.5 %]
+
+================ Testing Acc (Wed May 20 15:47:58 2020) ================
+epoch: 88, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:48:13 2020) ================
+epoch: 89, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:48:27 2020) ================
+epoch: 90, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:48:41 2020) ================
+epoch: 91, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:48:55 2020) ================
+epoch: 92, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:49:09 2020) ================
+epoch: 93, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:49:23 2020) ================
+epoch: 94, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:49:37 2020) ================
+epoch: 95, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:49:51 2020) ================
+epoch: 96, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:50:05 2020) ================
+epoch: 97, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:50:20 2020) ================
+epoch: 98, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:50:34 2020) ================
+epoch: 99, TEST ACC: [65.833 %]
+
+================ Testing Acc (Wed May 20 15:50:48 2020) ================
+epoch: 100, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:51:02 2020) ================
+epoch: 101, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:51:16 2020) ================
+epoch: 102, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:51:29 2020) ================
+epoch: 103, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:51:44 2020) ================
+epoch: 104, TEST ACC: [77.5 %]
+
+================ Testing Acc (Wed May 20 15:51:57 2020) ================
+epoch: 105, TEST ACC: [77.5 %]
+
+================ Testing Acc (Wed May 20 15:52:11 2020) ================
+epoch: 106, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 15:52:25 2020) ================
+epoch: 107, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:52:39 2020) ================
+epoch: 108, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:52:54 2020) ================
+epoch: 109, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 15:53:09 2020) ================
+epoch: 110, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:53:23 2020) ================
+epoch: 111, TEST ACC: [66.667 %]
+
+================ Testing Acc (Wed May 20 15:53:37 2020) ================
+epoch: 112, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:53:52 2020) ================
+epoch: 113, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 15:54:06 2020) ================
+epoch: 114, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:54:20 2020) ================
+epoch: 115, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:54:34 2020) ================
+epoch: 116, TEST ACC: [68.333 %]
+
+================ Testing Acc (Wed May 20 15:54:49 2020) ================
+epoch: 117, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:55:03 2020) ================
+epoch: 118, TEST ACC: [71.667 %]
+
+================ Testing Acc (Wed May 20 15:55:17 2020) ================
+epoch: 119, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:55:31 2020) ================
+epoch: 120, TEST ACC: [72.5 %]
+
+================ Testing Acc (Wed May 20 15:55:45 2020) ================
+epoch: 121, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 15:55:59 2020) ================
+epoch: 122, TEST ACC: [80.833 %]
+
+================ Testing Acc (Wed May 20 15:56:14 2020) ================
+epoch: 123, TEST ACC: [77.5 %]
+
+================ Testing Acc (Wed May 20 15:56:28 2020) ================
+epoch: 124, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:56:43 2020) ================
+epoch: 125, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:56:57 2020) ================
+epoch: 126, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:57:11 2020) ================
+epoch: 127, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 15:57:25 2020) ================
+epoch: 128, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:57:39 2020) ================
+epoch: 129, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:57:54 2020) ================
+epoch: 130, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 15:58:09 2020) ================
+epoch: 131, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 15:58:23 2020) ================
+epoch: 132, TEST ACC: [75.833 %]
+
+================ Testing Acc (Wed May 20 15:58:37 2020) ================
+epoch: 133, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 15:58:51 2020) ================
+epoch: 134, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:59:06 2020) ================
+epoch: 135, TEST ACC: [69.167 %]
+
+================ Testing Acc (Wed May 20 15:59:20 2020) ================
+epoch: 136, TEST ACC: [73.333 %]
+
+================ Testing Acc (Wed May 20 15:59:34 2020) ================
+epoch: 137, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 15:59:49 2020) ================
+epoch: 138, TEST ACC: [81.667 %]
+
+================ Testing Acc (Wed May 20 16:00:04 2020) ================
+epoch: 139, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 16:00:18 2020) ================
+epoch: 140, TEST ACC: [74.167 %]
+
+================ Testing Acc (Wed May 20 16:00:32 2020) ================
+epoch: 141, TEST ACC: [75.0 %]
+
+================ Testing Acc (Wed May 20 16:00:46 2020) ================
+epoch: 142, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:01:00 2020) ================
+epoch: 143, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 16:01:14 2020) ================
+epoch: 144, TEST ACC: [76.667 %]
+
+================ Testing Acc (Wed May 20 16:01:29 2020) ================
+epoch: 145, TEST ACC: [77.5 %]
+
+================ Testing Acc (Wed May 20 16:01:44 2020) ================
+epoch: 146, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:01:58 2020) ================
+epoch: 147, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:02:13 2020) ================
+epoch: 148, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 16:02:27 2020) ================
+epoch: 149, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 16:02:41 2020) ================
+epoch: 150, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:02:55 2020) ================
+epoch: 151, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:03:09 2020) ================
+epoch: 152, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:03:24 2020) ================
+epoch: 153, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:03:38 2020) ================
+epoch: 154, TEST ACC: [80.0 %]
+
+================ Testing Acc (Wed May 20 16:03:52 2020) ================
+epoch: 155, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:04:06 2020) ================
+epoch: 156, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:04:20 2020) ================
+epoch: 157, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:04:34 2020) ================
+epoch: 158, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:04:49 2020) ================
+epoch: 159, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 16:05:03 2020) ================
+epoch: 160, TEST ACC: [80.0 %]
+
+================ Testing Acc (Wed May 20 16:05:18 2020) ================
+epoch: 161, TEST ACC: [78.333 %]
+
+================ Testing Acc (Wed May 20 16:05:33 2020) ================
+epoch: 162, TEST ACC: [80.833 %]
+
+================ Testing Acc (Wed May 20 16:05:47 2020) ================
+epoch: 163, TEST ACC: [79.167 %]
+
+================ Testing Acc (Wed May 20 16:06:01 2020) ================
+epoch: 164, TEST ACC: [80.833 %]
+
+================ Testing Acc (Wed May 20 16:06:16 2020) ================
+epoch: 165, TEST ACC: [80.0 %]
+
